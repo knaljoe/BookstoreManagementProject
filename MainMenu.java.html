@@ -1,0 +1,83 @@
+<html>
+<head>
+<title>MainMenu.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #808080;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #cc7832;}
+.s3 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainMenu.java</font>
+</center></td></tr></table>
+<pre><span class="s0">//This Page acts as our hub, function being to move between pages.</span>
+<span class="s2">package </span><span class="s1">com.example.bookstoremanagementproject</span><span class="s2">;</span>
+
+<span class="s2">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.content.Intent</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.os.Bundle</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.view.View</span><span class="s2">;</span>
+
+<span class="s2">public class </span><span class="s1">MainMenu </span><span class="s2">extends </span><span class="s1">AppCompatActivity {</span>
+    <span class="s1">@Override</span>
+    <span class="s2">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+
+        <span class="s2">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s2">;</span>
+        <span class="s1">setContentView(R.layout.main_menu)</span><span class="s2">;</span>
+
+        <span class="s0">//The following 4 functions are identical, all going to different pages.</span>
+        <span class="s1">findViewById(R.id.button1).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Intent intent = </span><span class="s2">new </span><span class="s1">Intent(MainMenu.</span><span class="s2">this, <a href="Inventory.java.html">Inventory</a></span><span class="s1">.</span><span class="s2">class</span><span class="s1">)</span><span class="s2">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s2">;</span>
+                <span class="s1">finish()</span><span class="s2">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s1">findViewById(R.id.button2).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Intent intent = </span><span class="s2">new </span><span class="s1">Intent(MainMenu.</span><span class="s2">this, <a href="CustomerOrder.java.html">CustomerOrder</a></span><span class="s1">.</span><span class="s2">class</span><span class="s1">)</span><span class="s2">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s2">;</span>
+                <span class="s1">finish()</span><span class="s2">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s1">findViewById(R.id.button3).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Intent intent = </span><span class="s2">new </span><span class="s1">Intent(MainMenu.</span><span class="s2">this, <a href="SupplyOrder.java.html">SupplyOrder</a></span><span class="s1">.</span><span class="s2">class</span><span class="s1">)</span><span class="s2">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s2">;</span>
+                <span class="s1">finish()</span><span class="s2">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s1">findViewById(R.id.button4).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Intent intent = </span><span class="s2">new </span><span class="s1">Intent(MainMenu.</span><span class="s2">this, <a href="SalesHistory.java.html">SalesHistory</a></span><span class="s1">.</span><span class="s2">class</span><span class="s1">)</span><span class="s2">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s2">;</span>
+                <span class="s1">finish()</span><span class="s2">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s0">//Simple function to exit the program.</span>
+        <span class="s1">findViewById(R.id.exitButton).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">finish()</span><span class="s2">;</span>
+                <span class="s1">System.exit(</span><span class="s3">0</span><span class="s1">)</span><span class="s2">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+
+</pre>
+</body>
+</html>

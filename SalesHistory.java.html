@@ -1,0 +1,241 @@
+<html>
+<head>
+<title>SalesHistory.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #808080;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #cc7832;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SalesHistory.java</font>
+</center></td></tr></table>
+<pre><span class="s0">//This page acts similarly to Inventory except that it focuses on the SalesHistoryDatabase.</span>
+<span class="s2">package </span><span class="s1">com.example.bookstoremanagementproject</span><span class="s2">;</span>
+
+<span class="s2">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.content.Intent</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.database.Cursor</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.os.Bundle</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.view.View</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.widget.TextView</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.widget.Toast</span><span class="s2">;</span>
+
+<span class="s2">public class </span><span class="s1">SalesHistory </span><span class="s2">extends </span><span class="s1">AppCompatActivity {</span>
+
+    <a href="SalesHistoryDatabase.java.html">SalesHistoryDatabase</a> <span class="s1">SalesHistoryDatabase</span><span class="s2">;</span>
+    <span class="s2">int </span><span class="s1">rowCount = </span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s2">int </span><span class="s1">pageTotal = </span><span class="s3">0</span><span class="s2">;</span>
+    <span class="s2">int </span><span class="s1">currentPage = </span><span class="s3">0</span><span class="s2">;</span>
+
+    <span class="s1">@Override</span>
+    <span class="s2">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s2">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s2">;</span>
+        <span class="s1">setContentView(R.layout.activity_sales_history)</span><span class="s2">;</span>
+
+        <span class="s2">final </span><span class="s1">TextView Time1 = findViewById(R.id.Time1)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Time2 = findViewById(R.id.Time2)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Time3 = findViewById(R.id.Time3)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Time4 = findViewById(R.id.Time4)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Time5 = findViewById(R.id.Time5)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Book1 = findViewById(R.id.Book1)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Book2 = findViewById(R.id.Book2)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Book3 = findViewById(R.id.Book3)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Book4 = findViewById(R.id.Book4)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Book5 = findViewById(R.id.Book5)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Quantity1 = findViewById(R.id.Quantity1)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Quantity2 = findViewById(R.id.Quantity2)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Quantity3 = findViewById(R.id.Quantity3)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Quantity4 = findViewById(R.id.Quantity4)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">TextView Quantity5 = findViewById(R.id.Quantity5)</span><span class="s2">;</span>
+
+        <span class="s2">final </span><span class="s1">TextView pageNumber = findViewById(R.id.pageNumber)</span><span class="s2">;</span>
+
+        <span class="s1">SalesHistoryDatabase = </span><span class="s2">new <a href="SalesHistoryDatabase.java.html">SalesHistoryDatabase</a></span><span class="s1">(</span><span class="s2">this</span><span class="s1">)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">Cursor res = SalesHistoryDatabase.getAllData()</span><span class="s2">;</span>
+        <span class="s1">currentPage = </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s1">rowCount = res.getCount()</span><span class="s2">;</span>
+        <span class="s1">pageTotal = checkPage(rowCount)</span><span class="s2">;</span>
+
+        <span class="s1">populate(res</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">pageNumber</span><span class="s2">,</span>
+                <span class="s1">Time1</span><span class="s2">, </span><span class="s1">Time2</span><span class="s2">, </span><span class="s1">Time3</span><span class="s2">, </span><span class="s1">Time4</span><span class="s2">, </span><span class="s1">Time5</span><span class="s2">,</span>
+                <span class="s1">Book1</span><span class="s2">, </span><span class="s1">Book2</span><span class="s2">, </span><span class="s1">Book3</span><span class="s2">, </span><span class="s1">Book4</span><span class="s2">, </span><span class="s1">Book5</span><span class="s2">,</span>
+                <span class="s1">Quantity1</span><span class="s2">, </span><span class="s1">Quantity2</span><span class="s2">, </span><span class="s1">Quantity3</span><span class="s2">, </span><span class="s1">Quantity4</span><span class="s2">, </span><span class="s1">Quantity5)</span><span class="s2">;</span>
+
+        <span class="s0">//Should be  noted that there is no way to delete individual rows, as that'd be unnecessary in record keeping.</span>
+        <span class="s1">findViewById(R.id.resetButton).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Integer reset = SalesHistoryDatabase.reset()</span><span class="s2">;</span>
+                <span class="s1">Intent intent = </span><span class="s2">new </span><span class="s1">Intent(SalesHistory.</span><span class="s2">this, </span><span class="s1">SalesHistory.</span><span class="s2">class</span><span class="s1">)</span><span class="s2">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s2">;</span>
+                <span class="s1">finish()</span><span class="s2">;</span>
+                <span class="s2">if </span><span class="s1">(reset &gt; </span><span class="s3">0</span><span class="s1">)</span>
+                    <span class="s1">Toast.makeText(SalesHistory.</span><span class="s2">this, </span><span class="s4">&quot;Database Deleted&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_LONG).show()</span><span class="s2">;</span>
+                <span class="s2">else</span>
+                    <span class="s1">Toast.makeText(SalesHistory.</span><span class="s2">this,</span><span class="s4">&quot;Failed&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_LONG).show()</span><span class="s2">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s0">//Forward/Backward buttons function similarly to Inventory.</span>
+        <span class="s1">findViewById(R.id.forwardLastButton).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s2">if </span><span class="s1">(currentPage &lt; pageTotal) {</span>
+                    <span class="s1">currentPage = pageTotal</span><span class="s2">;</span>
+                    <span class="s1">populate(res</span><span class="s2">, </span><span class="s1">pageTotal</span><span class="s2">, </span><span class="s1">pageNumber</span><span class="s2">,</span>
+                            <span class="s1">Time1</span><span class="s2">, </span><span class="s1">Time2</span><span class="s2">, </span><span class="s1">Time3</span><span class="s2">, </span><span class="s1">Time4</span><span class="s2">, </span><span class="s1">Time5</span><span class="s2">,</span>
+                            <span class="s1">Book1</span><span class="s2">, </span><span class="s1">Book2</span><span class="s2">, </span><span class="s1">Book3</span><span class="s2">, </span><span class="s1">Book4</span><span class="s2">, </span><span class="s1">Book5</span><span class="s2">,</span>
+                            <span class="s1">Quantity1</span><span class="s2">, </span><span class="s1">Quantity2</span><span class="s2">, </span><span class="s1">Quantity3</span><span class="s2">, </span><span class="s1">Quantity4</span><span class="s2">, </span><span class="s1">Quantity5)</span><span class="s2">;</span>
+                <span class="s1">} </span><span class="s2">else </span><span class="s1">{</span>
+                    <span class="s1">Toast.makeText(SalesHistory.</span><span class="s2">this, </span><span class="s4">&quot;NO MORE ENTRIES&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s2">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s1">findViewById(R.id.forwardButton).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s2">if </span><span class="s1">(currentPage &lt; pageTotal) {</span>
+                    <span class="s1">currentPage++</span><span class="s2">;</span>
+                    <span class="s1">populate(res</span><span class="s2">, </span><span class="s1">currentPage</span><span class="s2">, </span><span class="s1">pageNumber</span><span class="s2">,</span>
+                            <span class="s1">Time1</span><span class="s2">, </span><span class="s1">Time2</span><span class="s2">, </span><span class="s1">Time3</span><span class="s2">, </span><span class="s1">Time4</span><span class="s2">, </span><span class="s1">Time5</span><span class="s2">,</span>
+                            <span class="s1">Book1</span><span class="s2">, </span><span class="s1">Book2</span><span class="s2">, </span><span class="s1">Book3</span><span class="s2">, </span><span class="s1">Book4</span><span class="s2">, </span><span class="s1">Book5</span><span class="s2">,</span>
+                            <span class="s1">Quantity1</span><span class="s2">, </span><span class="s1">Quantity2</span><span class="s2">, </span><span class="s1">Quantity3</span><span class="s2">, </span><span class="s1">Quantity4</span><span class="s2">, </span><span class="s1">Quantity5)</span><span class="s2">;</span>
+                <span class="s1">} </span><span class="s2">else </span><span class="s1">{</span>
+                    <span class="s1">Toast.makeText(SalesHistory.</span><span class="s2">this, </span><span class="s4">&quot;NO MORE ENTRIES&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s2">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s1">findViewById(R.id.backButton).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s2">if </span><span class="s1">(currentPage &gt; </span><span class="s3">0</span><span class="s1">) {</span>
+                    <span class="s1">currentPage--</span><span class="s2">;</span>
+                    <span class="s1">populate(res</span><span class="s2">, </span><span class="s1">currentPage</span><span class="s2">, </span><span class="s1">pageNumber</span><span class="s2">,</span>
+                            <span class="s1">Time1</span><span class="s2">, </span><span class="s1">Time2</span><span class="s2">, </span><span class="s1">Time3</span><span class="s2">, </span><span class="s1">Time4</span><span class="s2">, </span><span class="s1">Time5</span><span class="s2">,</span>
+                            <span class="s1">Book1</span><span class="s2">, </span><span class="s1">Book2</span><span class="s2">, </span><span class="s1">Book3</span><span class="s2">, </span><span class="s1">Book4</span><span class="s2">, </span><span class="s1">Book5</span><span class="s2">,</span>
+                            <span class="s1">Quantity1</span><span class="s2">, </span><span class="s1">Quantity2</span><span class="s2">, </span><span class="s1">Quantity3</span><span class="s2">, </span><span class="s1">Quantity4</span><span class="s2">, </span><span class="s1">Quantity5)</span><span class="s2">;</span>
+                <span class="s1">} </span><span class="s2">else </span><span class="s1">{</span>
+                    <span class="s1">Toast.makeText(SalesHistory.</span><span class="s2">this, </span><span class="s4">&quot;NO EARLIER ENTRIES&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s2">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s1">findViewById(R.id.backFirstButton).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s2">if </span><span class="s1">(currentPage &gt; </span><span class="s3">0</span><span class="s1">) {</span>
+                    <span class="s1">currentPage = </span><span class="s3">0</span><span class="s2">;</span>
+                    <span class="s1">populate(res</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">pageNumber</span><span class="s2">,</span>
+                            <span class="s1">Time1</span><span class="s2">, </span><span class="s1">Time2</span><span class="s2">, </span><span class="s1">Time3</span><span class="s2">, </span><span class="s1">Time4</span><span class="s2">, </span><span class="s1">Time5</span><span class="s2">,</span>
+                            <span class="s1">Book1</span><span class="s2">, </span><span class="s1">Book2</span><span class="s2">, </span><span class="s1">Book3</span><span class="s2">, </span><span class="s1">Book4</span><span class="s2">, </span><span class="s1">Book5</span><span class="s2">,</span>
+                            <span class="s1">Quantity1</span><span class="s2">, </span><span class="s1">Quantity2</span><span class="s2">, </span><span class="s1">Quantity3</span><span class="s2">, </span><span class="s1">Quantity4</span><span class="s2">, </span><span class="s1">Quantity5)</span><span class="s2">;</span>
+                <span class="s1">} </span><span class="s2">else </span><span class="s1">{</span>
+                    <span class="s1">Toast.makeText(SalesHistory.</span><span class="s2">this, </span><span class="s4">&quot;NO EARLIER ENTRIES&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s2">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s0">//Back to main menu.</span>
+        <span class="s1">findViewById(R.id.backBtnSalHis).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Intent intent = </span><span class="s2">new </span><span class="s1">Intent(SalesHistory.</span><span class="s2">this, <a href="MainMenu.java.html">MainMenu</a></span><span class="s1">.</span><span class="s2">class</span><span class="s1">)</span><span class="s2">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s2">;</span>
+                <span class="s1">finish()</span><span class="s2">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">//Both functions act nearly indentically to MyDBHandler.</span>
+    <span class="s2">static int </span><span class="s1">checkPage (</span><span class="s2">int </span><span class="s1">rowCount) {</span>
+        <span class="s2">if </span><span class="s1">(rowCount % </span><span class="s3">5 </span><span class="s1">== </span><span class="s3">0</span><span class="s1">) {</span>
+            <span class="s2">return </span><span class="s1">rowCount/=</span><span class="s3">5</span><span class="s2">;</span>
+        <span class="s1">} </span><span class="s2">else </span><span class="s1">{</span>
+            <span class="s2">return </span><span class="s1">rowCount/=</span><span class="s3">5 </span><span class="s1">+ </span><span class="s3">1</span><span class="s2">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">static void </span><span class="s1">populate(Cursor res</span><span class="s2">, int </span><span class="s1">position</span><span class="s2">, </span><span class="s1">TextView pageNumber</span><span class="s2">,</span>
+                         <span class="s1">TextView Time1</span><span class="s2">, </span><span class="s1">TextView Time2</span><span class="s2">, </span><span class="s1">TextView Time3</span><span class="s2">, </span><span class="s1">TextView Time4</span><span class="s2">, </span><span class="s1">TextView Time5</span><span class="s2">,</span>
+                         <span class="s1">TextView Book1</span><span class="s2">, </span><span class="s1">TextView Book2</span><span class="s2">, </span><span class="s1">TextView Book3</span><span class="s2">, </span><span class="s1">TextView Book4</span><span class="s2">, </span><span class="s1">TextView Book5</span><span class="s2">,</span>
+                         <span class="s1">TextView Quantity1</span><span class="s2">, </span><span class="s1">TextView Quantity2</span><span class="s2">, </span><span class="s1">TextView Quantity3</span><span class="s2">, </span><span class="s1">TextView Quantity4</span><span class="s2">, </span><span class="s1">TextView Quantity5) {</span>
+
+        <span class="s2">int </span><span class="s1">counter = </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s2">int </span><span class="s1">emptyCounter = </span><span class="s3">5</span><span class="s2">;</span>
+        <span class="s1">res.moveToPosition((position * </span><span class="s3">5</span><span class="s1">) - </span><span class="s3">1</span><span class="s1">)</span><span class="s2">;</span>
+        <span class="s1">pageNumber.setText(String.valueOf(position + </span><span class="s3">1</span><span class="s1">))</span><span class="s2">;</span>
+
+        <span class="s2">while </span><span class="s1">(res.moveToNext()) {</span>
+            <span class="s2">switch</span><span class="s1">(counter) {</span>
+                <span class="s2">case </span><span class="s3">0</span><span class="s1">:</span>
+                    <span class="s1">Time1.setText(res.getString(</span><span class="s3">3</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Book1.setText(res.getString(</span><span class="s3">1</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Quantity1.setText(res.getString(</span><span class="s3">2</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s2">break;</span>
+                <span class="s2">case </span><span class="s3">1</span><span class="s1">:</span>
+                    <span class="s1">Time2.setText(res.getString(</span><span class="s3">3</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Book2.setText(res.getString(</span><span class="s3">1</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Quantity2.setText(res.getString(</span><span class="s3">2</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s2">break;</span>
+                <span class="s2">case </span><span class="s3">2</span><span class="s1">:</span>
+                    <span class="s1">Time3.setText(res.getString(</span><span class="s3">3</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Book3.setText(res.getString(</span><span class="s3">1</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Quantity3.setText(res.getString(</span><span class="s3">2</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s2">break;</span>
+                <span class="s2">case </span><span class="s3">3</span><span class="s1">:</span>
+                    <span class="s1">Time4.setText(res.getString(</span><span class="s3">3</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Book4.setText(res.getString(</span><span class="s3">1</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Quantity4.setText(res.getString(</span><span class="s3">2</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s2">break;</span>
+                <span class="s2">case </span><span class="s3">4</span><span class="s1">:</span>
+                    <span class="s1">Time5.setText(res.getString(</span><span class="s3">3</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Book5.setText(res.getString(</span><span class="s3">1</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s1">Quantity5.setText(res.getString(</span><span class="s3">2</span><span class="s1">))</span><span class="s2">;</span>
+                    <span class="s2">break;</span>
+                <span class="s2">default</span><span class="s1">:</span>
+                    <span class="s2">break;</span>
+            <span class="s1">}</span>
+            <span class="s1">counter++</span><span class="s2">;</span>
+        <span class="s1">}</span>
+        <span class="s1">res.moveToFirst()</span><span class="s2">;</span>
+        <span class="s2">if </span><span class="s1">(counter != </span><span class="s3">5</span><span class="s1">) {</span>
+            <span class="s1">emptyCounter = emptyCounter - counter - </span><span class="s3">1</span><span class="s2">;</span>
+            <span class="s2">while </span><span class="s1">(emptyCounter != </span><span class="s3">5</span><span class="s1">) {</span>
+                <span class="s2">switch</span><span class="s1">(counter) {</span>
+                    <span class="s2">case </span><span class="s3">0</span><span class="s1">:</span>
+                        <span class="s1">Time1.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Book1.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Quantity1.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                    <span class="s2">case </span><span class="s3">1</span><span class="s1">:</span>
+                        <span class="s1">Time2.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Book2.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Quantity2.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                    <span class="s2">case </span><span class="s3">2</span><span class="s1">:</span>
+                        <span class="s1">Time3.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Book3.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Quantity3.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                    <span class="s2">case </span><span class="s3">3</span><span class="s1">:</span>
+                        <span class="s1">Time4.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Book4.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Quantity4.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                    <span class="s2">case </span><span class="s3">4</span><span class="s1">:</span>
+                        <span class="s1">Time5.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Book5.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">Quantity5.setText(</span><span class="s4">&quot; &quot;</span><span class="s1">)</span><span class="s2">;</span>
+                <span class="s1">}</span>
+                <span class="s1">emptyCounter++</span><span class="s2">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>

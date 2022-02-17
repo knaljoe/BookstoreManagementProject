@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>MyDBHandler.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #808080;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #cc7832;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MyDBHandler.java</font>
+</center></td></tr></table>
+<pre><span class="s0">//This database will act as our storage for all books in the system, keeping track of each one's name, quantity, and ID.</span>
+<span class="s2">package </span><span class="s1">com.example.bookstoremanagementproject</span><span class="s2">;</span>
+
+<span class="s2">import </span><span class="s1">android.content.ContentValues</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.content.Context</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.database.Cursor</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.database.sqlite.SQLiteDatabase</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.database.sqlite.SQLiteOpenHelper</span><span class="s2">;</span>
+
+<span class="s2">public class </span><span class="s1">MyDBHandler </span><span class="s2">extends </span><span class="s1">SQLiteOpenHelper {</span>
+    <span class="s2">private static final int </span><span class="s1">DATABASE_VERSION = </span><span class="s3">1</span><span class="s2">;</span>
+    <span class="s2">private static final </span><span class="s1">String DATABASE_NAME = </span><span class="s4">&quot;booksDB.db&quot;</span><span class="s2">;</span>
+    <span class="s2">private static final </span><span class="s1">String TABLE_NAME = </span><span class="s4">&quot;Inventory&quot;</span><span class="s2">;</span>
+    <span class="s2">private static final </span><span class="s1">String COLUMN_NAME = </span><span class="s4">&quot;Name&quot;</span><span class="s2">;</span>
+    <span class="s2">private static final </span><span class="s1">String COLUMN_QUANTITY = </span><span class="s4">&quot;Quantity&quot;</span><span class="s2">;</span>
+
+    <span class="s2">public </span><span class="s1">MyDBHandler(Context context) {</span>
+        <span class="s2">super</span><span class="s1">(context</span><span class="s2">, </span><span class="s1">DATABASE_NAME</span><span class="s2">, null, </span><span class="s3">1</span><span class="s1">)</span><span class="s2">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">//ID is dictated by an autoincrementing key, ID isn't funcitonally used so it's more for our tracking.</span>
+    <span class="s1">@Override</span>
+    <span class="s2">public void </span><span class="s1">onCreate(SQLiteDatabase db) {</span>
+        <span class="s1">db.execSQL(</span><span class="s4">&quot; create TABLE &quot; </span><span class="s1">+ TABLE_NAME + </span><span class="s4">&quot;(ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, QUANTITY INTEGER)&quot;</span><span class="s1">)</span><span class="s2">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s2">public void </span><span class="s1">onUpgrade(SQLiteDatabase db</span><span class="s2">, int </span><span class="s1">oldVersion</span><span class="s2">, int </span><span class="s1">newVersion) {</span>
+        <span class="s1">db.execSQL(</span><span class="s4">&quot;DROP TABLE IF EXISTS &quot; </span><span class="s1">+ TABLE_NAME)</span><span class="s2">;</span>
+        <span class="s1">onCreate(db)</span><span class="s2">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">//Our main function to insert data, the true and false are for where it's used to confirm a success or failure to insert.</span>
+    <span class="s2">public boolean </span><span class="s1">insertDataInv (String name</span><span class="s2">, </span><span class="s1">String quantity) {</span>
+        <span class="s1">SQLiteDatabase db = </span><span class="s2">this</span><span class="s1">.getWritableDatabase()</span><span class="s2">;</span>
+        <span class="s1">ContentValues contentValues = </span><span class="s2">new </span><span class="s1">ContentValues()</span><span class="s2">;</span>
+        <span class="s1">contentValues.put(COLUMN_NAME</span><span class="s2">, </span><span class="s1">name)</span><span class="s2">;</span>
+        <span class="s1">contentValues.put(COLUMN_QUANTITY</span><span class="s2">, </span><span class="s1">quantity)</span><span class="s2">;</span>
+        <span class="s2">long </span><span class="s1">result = db.insert(TABLE_NAME</span><span class="s2">, null, </span><span class="s1">contentValues)</span><span class="s2">;</span>
+        <span class="s2">if </span><span class="s1">(result == -</span><span class="s3">1</span><span class="s1">)</span>
+            <span class="s2">return false;</span>
+        <span class="s2">else</span>
+            <span class="s2">return true;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">//Simple get and delete functions, followed by a total reset. This is used for printing all data, row removal, and complete restart for testing.</span>
+    <span class="s2">public </span><span class="s1">Cursor getAllData() {</span>
+        <span class="s1">SQLiteDatabase db = </span><span class="s2">this</span><span class="s1">.getWritableDatabase()</span><span class="s2">;</span>
+        <span class="s1">Cursor res = db.rawQuery(</span><span class="s4">&quot;select * from &quot; </span><span class="s1">+TABLE_NAME</span><span class="s2">, null</span><span class="s1">)</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s1">res</span><span class="s2">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">public </span><span class="s1">Integer delete (String id){</span>
+        <span class="s1">SQLiteDatabase db = </span><span class="s2">this</span><span class="s1">.getWritableDatabase()</span><span class="s2">;</span>
+        <span class="s2">int </span><span class="s1">delete = db.delete(TABLE_NAME</span><span class="s2">, </span><span class="s4">&quot;ID = ?&quot;</span><span class="s2">, new </span><span class="s1">String[]{id})</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s1">delete</span><span class="s2">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">public </span><span class="s1">Integer reset ()  {</span>
+        <span class="s1">SQLiteDatabase db = </span><span class="s2">this</span><span class="s1">.getWritableDatabase()</span><span class="s2">;</span>
+        <span class="s2">int </span><span class="s1">delete= db.delete(TABLE_NAME</span><span class="s2">,</span><span class="s4">&quot;1&quot;</span><span class="s2">, null</span><span class="s1">)</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s1">delete</span><span class="s2">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+
+</pre>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<html>
+<head>
+<title>CustomerOrder.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #808080;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #cc7832;}
+.s3 { color: #6a8759;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+CustomerOrder.java</font>
+</center></td></tr></table>
+<pre><span class="s0">//Page for customer to purchase books, also acts as where sales history entries are made.</span>
+<span class="s2">package </span><span class="s1">com.example.bookstoremanagementproject</span><span class="s2">;</span>
+
+<span class="s2">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.content.Intent</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.os.Bundle</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.view.View</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.widget.Button</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.widget.EditText</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.database.Cursor</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s1">android.widget.Toast</span><span class="s2">;</span>
+
+<span class="s2">public class </span><span class="s1">CustomerOrder </span><span class="s2">extends </span><span class="s1">AppCompatActivity {</span>
+    <a href="MyDBHandler.java.html">MyDBHandler</a> <span class="s1">myDBHandler</span><span class="s2">;</span>
+    <a href="SalesHistoryDatabase.java.html">SalesHistoryDatabase</a> <span class="s1">SalesHistoryDatabase</span><span class="s2">;</span>
+
+    <span class="s1">@Override</span>
+    <span class="s2">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s2">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s2">;</span>
+        <span class="s1">setContentView(R.layout.activity_customer_order)</span><span class="s2">;</span>
+
+        <span class="s2">final </span><span class="s1">EditText ID = findViewById(R.id.bookIDCust)</span><span class="s2">;</span>
+        <span class="s1">myDBHandler = </span><span class="s2">new <a href="MyDBHandler.java.html">MyDBHandler</a></span><span class="s1">(</span><span class="s2">this</span><span class="s1">)</span><span class="s2">;</span>
+        <span class="s1">SalesHistoryDatabase = </span><span class="s2">new <a href="SalesHistoryDatabase.java.html">SalesHistoryDatabase</a></span><span class="s1">(</span><span class="s2">this</span><span class="s1">)</span><span class="s2">;</span>
+        <span class="s2">final </span><span class="s1">Cursor res = myDBHandler.getAllData()</span><span class="s2">;</span>
+
+        <span class="s0">//This order will search for an entry by name, purchase 1 book, reintroduce the book back into the main database, and make a sales history entry.</span>
+        <span class="s1">findViewById(R.id.orderBtnCust).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">String custID = ID.getText().toString()</span><span class="s2">;</span>
+                <span class="s1">Boolean located = </span><span class="s2">false;</span>
+                <span class="s1">String name = </span><span class="s3">&quot;&quot;</span><span class="s2">;</span>
+                <span class="s1">String quantity = </span><span class="s3">&quot;&quot;</span><span class="s2">;</span>
+                <span class="s1">Integer counter = </span><span class="s4">0</span><span class="s2">;</span>
+                <span class="s1">String IDtoDelete = </span><span class="s3">&quot;&quot;</span><span class="s2">;</span>
+
+                <span class="s1">res.moveToFirst()</span><span class="s2">;</span>
+                <span class="s2">if </span><span class="s1">(res.getCount() == </span><span class="s4">0</span><span class="s1">) {</span>
+                    <span class="s1">Toast.makeText(CustomerOrder.</span><span class="s2">this, </span><span class="s3">&quot;Not found.&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_LONG).show()</span><span class="s2">;</span>
+                    <span class="s2">return;</span>
+                <span class="s1">}</span>
+
+                <span class="s2">while </span><span class="s1">(located == </span><span class="s2">false</span><span class="s1">) {</span>
+                    <span class="s2">if </span><span class="s1">(res.getString(</span><span class="s4">1</span><span class="s1">).equals(custID)) {</span>
+                        <span class="s1">IDtoDelete = res.getString(</span><span class="s4">0</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">name = res.getString(</span><span class="s4">1</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">quantity = res.getString(</span><span class="s4">2</span><span class="s1">)</span><span class="s2">;</span>
+                        <span class="s1">located = </span><span class="s2">true;</span>
+                    <span class="s1">} </span><span class="s2">else </span><span class="s1">{</span>
+                        <span class="s2">if </span><span class="s1">(res.moveToNext()) {</span>
+                            <span class="s1">counter++</span><span class="s2">;</span>
+                        <span class="s1">} </span><span class="s2">else </span><span class="s1">{</span>
+                            <span class="s1">Toast.makeText(CustomerOrder.</span><span class="s2">this, </span><span class="s3">&quot;Not found.&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_LONG).show()</span><span class="s2">;</span>
+                            <span class="s2">return;</span>
+                        <span class="s1">}</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+
+                <span class="s1">Integer purchaseTotal = Integer.parseInt(quantity) - </span><span class="s4">1</span><span class="s2">;</span>
+                <span class="s1">Toast.makeText(CustomerOrder.</span><span class="s2">this, </span><span class="s3">&quot;Purchase Complete for &quot; </span><span class="s1">+ name + </span><span class="s3">&quot;.&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s2">;</span>
+                <span class="s1">myDBHandler.delete(IDtoDelete)</span><span class="s2">;</span>
+                <span class="s2">if </span><span class="s1">(purchaseTotal &lt;= </span><span class="s4">0</span><span class="s1">) {</span>
+                    <span class="s1">Toast.makeText(CustomerOrder.</span><span class="s2">this, </span><span class="s1">name + </span><span class="s3">&quot; is out of stock.&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s2">;</span>
+                <span class="s1">} </span><span class="s2">else </span><span class="s1">{</span>
+                    <span class="s1">quantity = purchaseTotal.toString()</span><span class="s2">;</span>
+                    <span class="s1">Toast.makeText(CustomerOrder.</span><span class="s2">this, </span><span class="s1">quantity + </span><span class="s3">&quot; book(s) remaining.&quot;</span><span class="s2">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s2">;</span>
+                    <span class="s1">myDBHandler.insertDataInv(name</span><span class="s2">, </span><span class="s1">quantity)</span><span class="s2">;</span>
+                    <span class="s1">SalesHistoryDatabase.insertDataSal(name</span><span class="s2">, </span><span class="s3">&quot;-1&quot;</span><span class="s1">)</span><span class="s2">;</span>
+                <span class="s1">}</span>
+                <span class="s2">return;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+
+        <span class="s0">//Back to main menu.</span>
+        <span class="s1">findViewById(R.id.backBtnCust).setOnClickListener(</span><span class="s2">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s2">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Intent intent = </span><span class="s2">new </span><span class="s1">Intent(CustomerOrder.</span><span class="s2">this, <a href="MainMenu.java.html">MainMenu</a></span><span class="s1">.</span><span class="s2">class</span><span class="s1">)</span><span class="s2">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s2">;</span>
+                <span class="s1">finish()</span><span class="s2">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s2">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>
